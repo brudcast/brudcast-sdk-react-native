@@ -1,3 +1,4 @@
+import type {} from '@brudcast/react-native';
 import { extendBrudcast } from '@brudcast/react-native/module';
 
 import { BrudcastPush } from './push';

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {},
-    "types": []
+    "types": [],
+    "customConditions": ["react-native-strict-api"]
   },
   "include": ["src"],
   "exclude": ["**/__tests__", "lib"]
