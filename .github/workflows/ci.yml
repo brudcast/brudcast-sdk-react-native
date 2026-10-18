@@ -119,10 +119,12 @@ jobs:
       - name: Install pods
         working-directory: example/ios
         env:
-          USE_FRAMEWORKS: ${{ matrix.linkage == 'static frameworks' && 'static' || '' }}
+          LINKAGE: ${{ matrix.linkage }}
           RCT_USE_RN_DEP: '1'
           RCT_USE_PREBUILT_RNCORE: '1'
-        run: pod install
+        run: |
+          if [ "$LINKAGE" = "static frameworks" ]; then export USE_FRAMEWORKS=static; fi
+          pod install
 
       - name: Build the example app
         working-directory: example/ios
