@@ -1,0 +1,44 @@
+{
+  "name": "brudcast-sdk-react-native",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Brudcast React Native SDK workspace",
+  "workspaces": [
+    "packages/*",
+    "example"
+  ],
+  "scripts": {
+    "build": "yarn workspaces foreach --all --topological --no-private run prepare",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"packages/*/src/**/*.{ts,tsx}\" \"example/src/**/*.{ts,tsx}\"",
+    "format": "prettier --check .",
+    "test": "jest",
+    "vendor:ios": "node scripts/vendor-ios.js",
+    "check:vendor": "node scripts/vendor-ios.js --check",
+    "check:version": "node scripts/check-version.js",
+    "example": "yarn workspace brudcast-react-native-example"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@react-native/babel-preset": "0.86.2",
+    "@react-native/jest-preset": "0.86.2",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.2.0",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "jest": "^30.2.0",
+    "prettier": "^3.9.6",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-builder-bob": "^0.43.2",
+    "react-test-renderer": "19.2.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.46.2"
+  },
+  "packageManager": "yarn@4.11.0",
+  "engines": {
+    "node": ">= 22.11.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/brudcast/brudcast-sdk-ios.git",
+  "tag": "v0.2.0",
+  "commit": "5ac55194532278455c3c5a79538b2ac21e30d29f",
+  "modules": {
+    "BrudcastPush": "ios/vendor",
+    "BrudcastNotificationService": "ios/notification-service"
+  },
+  "files": {
+    "ios/vendor/BrudcastPush/BrudcastPush.swift": "f195f76242ab14b1c61990d320e01393b43ed187915f03f1d02d82a08efcc093",
+    "ios/vendor/BrudcastPush/BrudcastPushNotification.swift": "46d342beaaddb6174129b8fd248cc2e2d191765af82910de674590edc275f280",
+    "ios/vendor/BrudcastPush/PrivacyInfo.xcprivacy": "aa0907e08659ab13ad0432b5bd3b21dd1fd2afe4af11406e5fc7a563122e4fb3",
+    "ios/notification-service/BrudcastNotificationService/BrudcastNotificationServiceExtension.swift": "8b0a59236773588002e79cceab5a466da7285e22f4580a1a4df5f86e1694a7a3",
+    "ios/notification-service/BrudcastNotificationService/BrudcastSharedEvents.swift": "503d18bd3b961e83929045a988b8546d7cbf39cd4fce8d147907d8d724d76e5b",
+    "ios/notification-service/BrudcastNotificationService/PrivacyInfo.xcprivacy": "aa0907e08659ab13ad0432b5bd3b21dd1fd2afe4af11406e5fc7a563122e4fb3"
+  }
+}

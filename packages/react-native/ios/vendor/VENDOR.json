@@ -1,0 +1,24 @@
+{
+  "repository": "https://github.com/brudcast/brudcast-sdk-ios.git",
+  "tag": "v0.2.0",
+  "commit": "5ac55194532278455c3c5a79538b2ac21e30d29f",
+  "modules": {
+    "Brudcast": "ios/vendor"
+  },
+  "files": {
+    "ios/vendor/Brudcast/Brudcast.swift": "0627039b2a59cb54b526cbb78f416ae01658a6bd20ba0077ca73f5f90ba5d753",
+    "ios/vendor/Brudcast/BrudcastAction.swift": "eac9c36e8547cb3d0f697632fee2aa33df24f50486c66d32207ace579e3ac7bf",
+    "ios/vendor/Brudcast/BrudcastDecision.swift": "b51f3bef5d4095e5d0a34e62a1c03d0d509fa14905049591207ddb38efda193b",
+    "ios/vendor/Brudcast/BrudcastEvent.swift": "ecb499f9eb978464edf5853cd99b83997582b0245ad61547d8fc7781cdc6fb58",
+    "ios/vendor/Brudcast/BrudcastLogger.swift": "bff09fa8ef8c3407bace78c9ed9d6c2960c82564386d36248a2f57dbd0912aed",
+    "ios/vendor/Brudcast/BrudcastModule.swift": "b15cc4ca1846545742815ebaf45fc2ff32351ec7fc76dac06521dfcfe5d8bdda",
+    "ios/vendor/Brudcast/BrudcastOptions.swift": "2561bae1c5dc892dfded6ae9ab00d36881e12474a337f048f19de65d9b1a3768",
+    "ios/vendor/Brudcast/BrudcastValue.swift": "2149021b12f551e1615e3876747706f72483d3884fa5fdf41dc937a514c12e84",
+    "ios/vendor/Brudcast/Internal/ApiClient.swift": "1e7be0f80614a1b6683d53c887bb75aec6b66f30e0ce9525a10bbeb028a5bb54",
+    "ios/vendor/Brudcast/Internal/BrudcastCore.swift": "88b67f77f8213135a48425076c66de70d00adc30d2a79b47ebd685b1ca4033b4",
+    "ios/vendor/Brudcast/Internal/BrudcastSDK.swift": "49b56f32c1cbdd77fe4ea23d979df0574f93ab36e1050636fd5c405265912b14",
+    "ios/vendor/Brudcast/Internal/EventQueue.swift": "f1098b991d334708138146ae7471de7f4193c89bb00082866dcdc33bc62240bd",
+    "ios/vendor/Brudcast/Internal/Storage.swift": "24f2ec311ed028e317faef41e88f144620eb46176a2a95d7ecf38ea1969539b1",
+    "ios/vendor/Brudcast/PrivacyInfo.xcprivacy": "7cd6f273a5219083c86932e5eb1da186e7c80687c9f354455b5ad898b9daaf20"
+  }
+}

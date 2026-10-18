@@ -1,0 +1,6 @@
+{
+  "publishableKey": "bpk_...",
+  "environment": "local",
+  "localPort": 8191,
+  "sampleBackendUrl": "http://10.0.2.2:4000"
+}

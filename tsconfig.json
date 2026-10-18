@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "@brudcast/react-native": ["./packages/react-native/src/index"],
+      "@brudcast/react-native/module": ["./packages/react-native/src/module"],
+      "@brudcast/react-native-in-app": ["./packages/react-native-in-app/src/index"],
+      "@brudcast/react-native-push": ["./packages/react-native-push/src/index"]
+    },
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "customConditions": ["brudcast-source", "react-native-strict-api"],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+    "types": ["jest"],
+    "verbatimModuleSyntax": true
+  },
+  "include": ["packages/*/src", "example/src", "example/index.js"],
+  "exclude": ["**/lib", "**/node_modules"]
+}

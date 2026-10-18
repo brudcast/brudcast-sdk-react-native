@@ -1,0 +1,5 @@
+{
+  "publishableKey": "bpk_...",
+  "environment": "staging",
+  "sampleBackendUrl": "https://sample-backend.staging.example.com"
+}

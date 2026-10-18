@@ -1,0 +1,132 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  javascript:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Check every file names the same version
+        run: yarn check:version
+
+      - name: Check the vendored iOS sources match the native release
+        run: yarn check:vendor
+
+      - name: Check formatting
+        run: yarn format
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Run the unit tests
+        run: yarn test --ci
+
+      - name: Build the packages
+        run: yarn build
+
+      - name: Check what each package would publish
+        run: |
+          for dir in packages/*; do
+            (cd "$dir" && npm pack --dry-run --json > "$RUNNER_TEMP/pack.json")
+            node -e '
+              const files = require(process.argv[1])[0].files.map((file) => file.path);
+              const missing = ["lib/module/index.js", "README.md", "LICENSE"].filter((file) => !files.includes(file));
+              const leaked = files.filter((file) => /__tests__|android\/build|\/Pods\//.test(file));
+              if (missing.length || leaked.length) {
+                console.error(`missing: ${missing.join(", ")}; should not ship: ${leaked.join(", ")}`);
+                process.exit(1);
+              }
+            ' "$RUNNER_TEMP/pack.json"
+          done
+
+  android:
+    name: Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build the example app
+        working-directory: example/android
+        run: ./gradlew assembleDebug --no-daemon -PreactNativeArchitectures=x86_64
+
+      - name: Run the native unit tests
+        working-directory: example/android
+        run: ./gradlew :brudcast_react-native:testDebugUnitTest --no-daemon
+
+  ios:
+    name: iOS (${{ matrix.linkage }})
+    runs-on: macos-15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        linkage: [static libraries, static frameworks]
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Install pods
+        working-directory: example/ios
+        env:
+          USE_FRAMEWORKS: ${{ matrix.linkage == 'static frameworks' && 'static' || '' }}
+          RCT_USE_RN_DEP: '1'
+          RCT_USE_PREBUILT_RNCORE: '1'
+        run: pod install
+
+      - name: Build the example app
+        working-directory: example/ios
+        run: |
+          xcodebuild -workspace BrudcastExample.xcworkspace -scheme BrudcastExample \
+            -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build

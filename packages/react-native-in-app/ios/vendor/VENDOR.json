@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/brudcast/brudcast-sdk-ios.git",
+  "tag": "v0.2.0",
+  "commit": "5ac55194532278455c3c5a79538b2ac21e30d29f",
+  "modules": {
+    "BrudcastInApp": "ios/vendor"
+  },
+  "files": {
+    "ios/vendor/BrudcastInApp/BrudcastInApp.swift": "fc6147a1692a55322184ce6efa88844a7e00b04a955ff7e395659f9729a3f370",
+    "ios/vendor/BrudcastInApp/BrudcastInbox.swift": "6afd9eb52391c0a9dc44be6a2b9eada953db84cb72c953c6c195c65e835610c3",
+    "ios/vendor/BrudcastInApp/Engine/MessageStore.swift": "3a8b6ceba2623bf9d7441074a77e26441ca09abf37352aea0a9c47553758390d",
+    "ios/vendor/BrudcastInApp/Engine/TriggerMatcher.swift": "736253f6cc27b407cd07f8ae402a988b69bb3fe3ed3e04e9a53b95dbdc4ea661",
+    "ios/vendor/BrudcastInApp/Model/InAppDesign.swift": "018526ea1af499cd697043687a5a03e005efa57ca7f4538fcf13815e0f1e0cc4",
+    "ios/vendor/BrudcastInApp/Model/InAppMessage.swift": "769ff8083c758e90b5ee7bb2bdb514dcfe60a8ad20c5761b32d4aecf16765c52",
+    "ios/vendor/BrudcastInApp/Network/ServerSentEvents.swift": "2f090179c61ad3176f156e65ab9f91370eb1e8e95fe80efff13f4a9ccfc71e7b",
+    "ios/vendor/BrudcastInApp/PrivacyInfo.xcprivacy": "aa0907e08659ab13ad0432b5bd3b21dd1fd2afe4af11406e5fc7a563122e4fb3",
+    "ios/vendor/BrudcastInApp/UI/InAppBlockViews.swift": "fd5711ba7d7e84c4991e0aad86d9897bf2e51f3c9e19a08692ebf04dfd9cab0b",
+    "ios/vendor/BrudcastInApp/UI/InAppColors.swift": "d704c259c81eab2f69977be0912a33c87c7c0502195d2dd5b6a2420b023ef8b0",
+    "ios/vendor/BrudcastInApp/UI/InAppFormatViews.swift": "120e3ae309be8dec66f0f1c44f939db29ec385e9cf900dc89481f20d33e0fee9",
+    "ios/vendor/BrudcastInApp/UI/InAppImageLoader.swift": "30b53adf61928b35271f8b6cc06c3a5d88c802a2358c6f87041c44f9a19bc9e7",
+    "ios/vendor/BrudcastInApp/UI/InAppPresentationCallbacks.swift": "e85358277593277c60ea8298d1fcb5a9017e97d7febdc393b98e79384803a72e",
+    "ios/vendor/BrudcastInApp/UI/InAppPresenter.swift": "2016a45d2a917af6808578a2c224184af10b14972ded93e2d1164275a366f055",
+    "ios/vendor/BrudcastInApp/UI/InboxScreen.swift": "33ac8205aa6d591c08f4af7fb808b86978f2ed08b1b3c1af25d0cfe2693cbd9a"
+  }
+}

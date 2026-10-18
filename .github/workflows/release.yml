@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+*']
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Check the tag names the version every file names
+        run: node scripts/check-version.js "${GITHUB_REF_NAME#v}"
+
+      - name: Check the vendored iOS sources match the native release
+        run: yarn check:vendor
+
+      - name: Build the packages
+        run: yarn build
+
+      - name: Publish the core, then the module packages
+        run: |
+          for dir in packages/react-native packages/react-native-in-app packages/react-native-push; do
+            (cd "$dir" && npm publish --provenance --access public)
+          done

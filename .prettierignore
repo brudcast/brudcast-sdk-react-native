@@ -1,0 +1,8 @@
+lib/
+node_modules/
+.yarn/
+packages/*/ios/vendor/
+packages/*/android/build/
+example/android/
+example/ios/
+example/vendor/

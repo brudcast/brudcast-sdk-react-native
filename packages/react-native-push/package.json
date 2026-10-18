@@ -1,0 +1,120 @@
+{
+  "name": "@brudcast/react-native-push",
+  "version": "0.2.0",
+  "description": "Brudcast push notifications for React Native: permission, FCM token registration, the notification handler and native open tracking.",
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "brudcast-source": "./src/index.ts",
+      "types": "./lib/typescript/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./app.plugin.js": "./app.plugin.js",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "./src/index.ts",
+    "./lib/module/index.js"
+  ],
+  "files": [
+    "src",
+    "lib",
+    "NOTICE",
+    "CHANGELOG.md",
+    "android",
+    "ios",
+    "*.podspec",
+    "app.plugin.js",
+    "plugin",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
+    "!android/src/test",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "rm -rf lib android/build"
+  },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android",
+    "brudcast",
+    "push notifications",
+    "fcm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brudcast/brudcast-sdk-react-native.git",
+    "directory": "packages/react-native-push"
+  },
+  "author": "Brudcast <security@brudcast.com> (https://brudcast.com)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/brudcast/brudcast-sdk-react-native/issues"
+  },
+  "homepage": "https://github.com/brudcast/brudcast-sdk-react-native#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "brudcast": {
+    "nativeVersion": "0.2.0"
+  },
+  "devDependencies": {
+    "@brudcast/react-native": "workspace:*",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-builder-bob": "^0.43.2"
+  },
+  "peerDependencies": {
+    "@brudcast/react-native": "0.2.0",
+    "expo": "*",
+    "react": "*",
+    "react-native": ">=0.86.0"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  },
+  "codegenConfig": {
+    "name": "BrudcastReactNativePushSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "com.brudcast.reactnative.push"
+    },
+    "ios": {
+      "modulesProvider": {
+        "BrudcastPush": "RNBrudcastPush"
+      }
+    }
+  },
+  "peerDependenciesMeta": {
+    "expo": {
+      "optional": true
+    }
+  }
+}

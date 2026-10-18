@@ -1,0 +1,68 @@
+buildscript {
+  ext.BrudcastReactNative = [
+    kotlinVersion: "2.1.20",
+    minSdkVersion: 24,
+    compileSdkVersion: 36
+  ]
+
+  ext.getExtOrDefault = { prop ->
+    if (rootProject.ext.has(prop)) {
+      return rootProject.ext.get(prop)
+    }
+    return BrudcastReactNative[prop]
+  }
+
+  repositories {
+    google()
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath "com.android.tools.build:gradle:8.7.2"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}"
+  }
+}
+
+def brudcastPackage = new groovy.json.JsonSlurper().parse(file("../package.json"))
+def brudcastSdkVersion = brudcastPackage.brudcast.nativeVersion
+
+apply plugin: "com.android.library"
+
+if (project.extensions.findByName("kotlin") == null) {
+  apply plugin: "kotlin-android"
+}
+
+apply plugin: "com.facebook.react"
+
+repositories {
+  if (findProperty("brudcastMavenLocal") == "true") {
+    mavenLocal()
+  }
+  google()
+  mavenCentral()
+}
+
+android {
+  namespace "com.brudcast.reactnative.push"
+
+  compileSdkVersion getExtOrDefault("compileSdkVersion")
+
+  defaultConfig {
+    minSdkVersion getExtOrDefault("minSdkVersion")
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+}
+
+dependencies {
+  implementation "com.facebook.react:react-android"
+  api "com.brudcast:sdk-push:${brudcastSdkVersion}"
+  def core = rootProject.findProject(":brudcast_react-native")
+  if (core == null) {
+    throw new GradleException("@brudcast/react-native-push needs @brudcast/react-native in the app's package.json")
+  }
+  implementation core
+}

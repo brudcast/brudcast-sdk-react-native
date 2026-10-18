@@ -1,0 +1,53 @@
+appId: com.brudcast.reactnative.example
+name: Sign in, receive the welcome message, follow it, and read it in the inbox
+---
+- launchApp:
+    clearState: true
+- assertVisible: 'Your backend at .* computes the user hash.'
+- tapOn:
+    id: userId
+- inputText: ${EXTERNAL_ID}
+- hideKeyboard
+- tapOn:
+    id: signIn
+- assertVisible: Send me a welcome
+
+- tapOn: Send me a welcome
+- extendedWaitUntil:
+    visible: Welcome, ${EXTERNAL_ID}
+    timeout: 20000
+- assertVisible: Inbox \(1\)
+- tapOn: Get started
+- assertVisible: Sneakers, \$120
+
+- tapOn: Back
+- tapOn:
+    id: inbox
+- extendedWaitUntil:
+    visible: '.*Your account is ready\..*'
+    timeout: 15000
+- tapOn: 'Welcome, ${EXTERNAL_ID}.*'
+- assertVisible: Not now
+- tapOn: Back
+- tapOn: Back
+- assertVisible: '^Inbox$'
+
+- tapOn:
+    id: shop
+- tapOn:
+    id: product-sneakers
+- tapOn:
+    id: buy
+- assertVisible: In-app messages wait until you leave checkout.
+- tapOn:
+    id: pay
+- assertVisible: Thanks for your order.
+- tapOn: Back to home
+
+- tapOn: Account
+- assertVisible: Signed in as ${EXTERNAL_ID}
+- assertVisible: 'Actions'
+- assertVisible: '.*inApp deeplink brudcast-sample://welcome'
+- tapOn:
+    id: signOut
+- assertVisible: 'Your backend at .* computes the user hash.'
