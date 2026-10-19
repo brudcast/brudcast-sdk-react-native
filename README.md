@@ -1,5 +1,7 @@
 # Brudcast React Native SDK
 
+![Brudcast: Reach Everyone, Every time](.github/assets/banner.svg)
+
 In-app messaging and push notifications for React Native apps on Brudcast, on Android and iOS. The
 packages run the native [Android](https://github.com/brudcast/brudcast-sdk-android) and
 [iOS](https://github.com/brudcast/brudcast-sdk-ios) SDKs: rendering, storage, networking, the event
