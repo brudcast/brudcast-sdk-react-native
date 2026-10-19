@@ -50,7 +50,7 @@ jobs:
       - name: Check what each package would publish
         run: |
           for dir in packages/*; do
-            (cd "$dir" && npm pack --dry-run --json > "$RUNNER_TEMP/pack.json")
+            (cd "$dir" && npm pack --dry-run --json --ignore-scripts > "$RUNNER_TEMP/pack.json")
             node -e '
               const files = require(process.argv[1])[0].files.map((file) => file.path);
               const missing = ["lib/module/index.js", "README.md", "LICENSE"].filter((file) => !files.includes(file));
