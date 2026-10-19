@@ -50,11 +50,11 @@ jobs:
       - name: Check what each package would publish
         run: |
           for dir in packages/*; do
-            (cd "$dir" && npm pack --dry-run --json > "$RUNNER_TEMP/pack.json")
+            (cd "$dir" && npm pack --dry-run --json --ignore-scripts > "$RUNNER_TEMP/pack.json")
             node -e '
               const files = require(process.argv[1])[0].files.map((file) => file.path);
               const missing = ["lib/module/index.js", "README.md", "LICENSE"].filter((file) => !files.includes(file));
-              const leaked = files.filter((file) => /__tests__|android\/build|\/Pods\//.test(file));
+              const leaked = files.filter((file) => /__tests__|android\/build\/|\/Pods\//.test(file));
               if (missing.length || leaked.length) {
                 console.error(`missing: ${missing.join(", ")}; should not ship: ${leaked.join(", ")}`);
                 process.exit(1);
@@ -119,10 +119,12 @@ jobs:
       - name: Install pods
         working-directory: example/ios
         env:
-          USE_FRAMEWORKS: ${{ matrix.linkage == 'static frameworks' && 'static' || '' }}
+          LINKAGE: ${{ matrix.linkage }}
           RCT_USE_RN_DEP: '1'
           RCT_USE_PREBUILT_RNCORE: '1'
-        run: pod install
+        run: |
+          if [ "$LINKAGE" = "static frameworks" ]; then export USE_FRAMEWORKS=static; fi
+          pod install
 
       - name: Build the example app
         working-directory: example/ios
