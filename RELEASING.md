@@ -1,29 +1,48 @@
 # Releasing
 
-The three packages are published to [npm](https://www.npmjs.com) together, with the same version
-as the native SDKs they run. Pushing a `v<version>` tag runs `.github/workflows/release.yml`.
+The three packages are published to [npm](https://www.npmjs.com) together, with one version of
+their own. Pushing a `v<version>` tag runs `.github/workflows/release.yml`.
 
-## Order
+## Versions
 
-The packages pin the native SDKs exactly, so the native release comes first:
+The package version and the native SDK version are separate:
+
+- **The package version** follows [Semantic Versioning](https://semver.org) for the JavaScript API
+  and the packaging. All three packages share it, and the in-app and push packages require the
+  exact core version.
+- **The native SDK version** is `brudcast.nativeVersion` in each package's `package.json`. The
+  Android builds depend on the native artifacts at that version, and the podspecs compile the iOS
+  sources vendored from that tag. All three packages pin the same one.
+
+A release that changes only the JavaScript, the bridge or the packaging keeps the native version.
+Moving to a new native version is a change apps notice, so it gets at least a minor version, and a
+major one when the native release breaks its API.
+
+## Moving to a new native version
+
+The native release comes first:
 
 1. Release `brudcast-sdk-android` and `brudcast-sdk-ios` at the version, as their `RELEASING.md`
    files describe, and wait until the artifacts are on Maven Central and the tag is on GitHub.
-2. Release these packages.
+2. On a branch, set `brudcast.nativeVersion` in each package's `package.json`, then run
+   `yarn vendor:ios`, which copies the native iOS sources at the new tag into the packages and
+   records it in each `ios/vendor/VENDOR.json`. Add a line to each `CHANGELOG.md` under
+   `Unreleased`, such as "Runs the native SDKs 0.3.0", and merge to `main`. CI runs
+   `yarn check:vendor`, which fails until the vendored sources match the pin.
+3. Release these packages as below.
 
 ## Release
 
 1. On a `docs/release-<version>` branch, set the version in:
-   - `version` and `brudcast.nativeVersion` in each package's `package.json`, and the
-     `@brudcast/react-native` peer constraint in the in-app and push packages;
+   - `version` in each package's `package.json`, and the `@brudcast/react-native` peer constraint
+     in the in-app and push packages;
    - `brudcastReactNativeVersion` in `packages/react-native/src/version.ts`;
    - the install lines in each package's `README.md`;
-   - each `CHANGELOG.md`: move `Unreleased` under the version with today's date.
+   - each `CHANGELOG.md`: move `Unreleased` under the version with today's date, and make sure the
+     section names the native SDK version it runs.
 
-   Then run `yarn vendor:ios`, which copies the native iOS sources at the new tag into the packages
-   and records it in each `ios/vendor/VENDOR.json`. Commit everything as `docs: release <version>`
-   and merge to `main`. CI runs `yarn check:version` and `yarn check:vendor`, which fail until all
-   of them agree.
+   Commit everything as `docs: release <version>` and merge to `main`. CI runs
+   `yarn check:version`, which fails until all of them agree.
 
 2. Tag `main` with `v<version>`, such as `v0.2.0`, and push the tag:
 
@@ -34,7 +53,7 @@ The packages pin the native SDKs exactly, so the native release comes first:
 
 3. The workflow runs, in order:
    - **Verify**: the tag matches the version, the tagged commit is on `main`, every file names the
-     version with a dated changelog, and the vendored iOS sources match the native tag;
+     version with a dated changelog, and the vendored iOS sources match the native version pin;
    - **CI**: the whole of `ci.yml`, the JavaScript checks and the Android and iOS example builds;
    - **Pack**: builds and packs the three packages once, so the publish ships exactly what was
      checked;

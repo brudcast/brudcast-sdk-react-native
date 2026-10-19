@@ -2,7 +2,7 @@
 
 All notable changes to `@brudcast/react-native-push` are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the package follows
-[Semantic Versioning](https://semver.org) with the same version as the native SDKs it runs.
+[Semantic Versioning](https://semver.org). Each release names the native SDK version it runs.
 
 ## [0.2.0] - 2026-10-19
 
