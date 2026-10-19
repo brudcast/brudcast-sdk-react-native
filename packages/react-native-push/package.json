@@ -1,6 +1,6 @@
 {
   "name": "@brudcast/react-native-push",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Brudcast push notifications for React Native: permission, FCM token registration, the notification handler and native open tracking.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
@@ -76,7 +76,7 @@
     "react-native-builder-bob": "^0.43.2"
   },
   "peerDependencies": {
-    "@brudcast/react-native": "0.2.0",
+    "@brudcast/react-native": "0.2.1",
     "expo": "*",
     "react": "*",
     "react-native": ">=0.86.0"

@@ -57,7 +57,7 @@ describe('initialize', () => {
       logLevel: 'warning',
       appearance: 'system',
       modules: ['in_app', 'push'],
-      wrapperVersion: '0.2.0',
+      wrapperVersion: '0.2.1',
     });
   });
 

@@ -18,7 +18,7 @@ Messages are drawn natively, over any screen, by the same renderer native apps u
 ## Getting started
 
 ```sh
-yarn add @brudcast/react-native@0.2.0 @brudcast/react-native-in-app@0.2.0
+yarn add @brudcast/react-native@0.2.1 @brudcast/react-native-in-app@0.2.1
 cd ios && pod install
 ```
 
