@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
  * Checks that everything naming the release version agrees: the three package.json files, the
- * TypeScript version constant, the packages' peer constraints on the core, the native version each
- * package pins, the tag the vendored iOS sources came from, the newest released section of each
- * CHANGELOG.md, and the install lines in the READMEs. The packages share one version with the
- * native SDKs they run, so a mismatch anywhere means a release would ship the wrong native code or
- * the wrong docs.
+ * TypeScript version constant, the packages' peer constraints on the core, the newest released
+ * section of each CHANGELOG.md, and the install lines in the READMEs. The three packages share one
+ * version, so a mismatch anywhere means a release would ship packages that refuse each other or
+ * the wrong docs. The native SDK version the packages run is pinned separately, in
+ * `brudcast.nativeVersion`, and `yarn check:vendor` checks it.
  *
  * Usage: node scripts/check-version.js [expected-version]
  *   With a version, such as the release tag without its v, also checks that everything names it
@@ -48,12 +48,6 @@ function main() {
     const dir = `packages/${name}`;
     const manifest = JSON.parse(read(`${dir}/package.json`));
     check(`${dir}/package.json`, manifest.version);
-    check(`The native SDK version in ${dir}/package.json`, manifest.brudcast?.nativeVersion);
-    const vendor = JSON.parse(read(`${dir}/ios/vendor/VENDOR.json`));
-    check(
-      `The vendored iOS sources in ${dir}/ios/vendor/VENDOR.json`,
-      vendor.tag?.replace(/^v/, '')
-    );
     const changelog = read(`${dir}/CHANGELOG.md`);
     check(
       `The newest released section of ${dir}/CHANGELOG.md`,
@@ -82,7 +76,7 @@ function main() {
     console.error('Bump them together in the release pull request. See RELEASING.md.');
     process.exit(1);
   }
-  console.log(`Every package, changelog, native pin and README names ${expected}`);
+  console.log(`Every package, changelog and README names ${expected}`);
 }
 
 main();

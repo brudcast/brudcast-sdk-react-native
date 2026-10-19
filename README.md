@@ -14,9 +14,9 @@ queue and triggers stay native, and TypeScript forwards calls to them.
 | [`@brudcast/react-native-push`](packages/react-native-push)     | Push: the FCM token from React Native Firebase, permission, the Expo plugin |
 
 Each package has its own native dependency, so a push-only app never ships the in-app renderer.
-The packages share one version with the native SDKs they run. They are TurboModules and Fabric
-components for the New Architecture, React Native 0.86 and later, bare or Expo with a development
-build.
+The packages share one version, and each release names the native SDK version it runs. They are
+TurboModules and Fabric components for the New Architecture, React Native 0.86 and later, bare or
+Expo with a development build.
 
 Start with the [`@brudcast/react-native` README](packages/react-native/README.md).
 

@@ -139,8 +139,8 @@ simulator, `10.0.2.2` from the Android emulator.
 
 ## Additional information
 
-- **Versions.** Keep every Brudcast package on the same version; each version runs the native SDKs
-  of the same number, and the module packages require the exact core version.
+- **Versions.** Keep every Brudcast package on the same version; the module packages require the
+  exact core version. The changelog names the native SDK version each release runs.
 - **Dev reloads.** Handlers set from JavaScript are dropped when the bundle reloads and set again
   by your startup code. Messages and taps that were waiting on the old bundle get the default.
 - **Example.** A complete app is in
