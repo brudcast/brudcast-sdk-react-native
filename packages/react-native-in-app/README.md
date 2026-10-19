@@ -26,7 +26,7 @@ Set up [`@brudcast/react-native`](https://www.npmjs.com/package/@brudcast/react-
 then add the module when you initialise:
 
 ```ts
-import { BrudcastInApp } from '@brudcast/react-native-in-app';
+import { BrudcastInApp, BrudcastMessageDecision } from '@brudcast/react-native-in-app';
 
 Brudcast.initialize('bpk_...', { modules: [BrudcastInApp.module] });
 ```
@@ -42,13 +42,14 @@ BrudcastInApp.pauseDisplay();
 BrudcastInApp.resumeDisplay();
 
 BrudcastInApp.setMessageHandler(async (message) => {
-  if (isRecording) return 'defer';
-  return 'show';
+  if (isRecording) return BrudcastMessageDecision.Defer;
+  return BrudcastMessageDecision.Show;
 });
 ```
 
-The handler answers `show`, `suppress` (not for this trigger), `defer` (wait for the next trigger)
-or `custom` (draw it yourself) within two seconds, after which the message shows. For `custom`,
+The handler answers `Show`, `Suppress` (not for this trigger), `Defer` (wait for the next trigger)
+or `Custom` (draw it yourself) within two seconds, after which the message shows. The strings
+`'show'`, `'suppress'`, `'defer'` and `'custom'` work too. For `Custom`,
 report what happened with `reportImpression(id)`, `reportClick(id, buttonId)` and
 `reportDismiss(id)`; `designDocument(message)` decodes the design.
 

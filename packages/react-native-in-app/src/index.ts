@@ -20,7 +20,7 @@ export {
   designDocument,
   type BrudcastInAppMessage,
   type BrudcastInboxPage,
-  type BrudcastMessageDecision,
+  BrudcastMessageDecision,
   type BrudcastMessageFormat,
   type BrudcastMessageHandler,
 } from './models';
