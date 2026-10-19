@@ -1,6 +1,6 @@
 {
   "name": "@brudcast/react-native-in-app",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Brudcast in-app messaging for React Native: native messages, the inbox, hooks and an inbox message view.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
@@ -73,7 +73,7 @@
     "react-native-builder-bob": "^0.43.2"
   },
   "peerDependencies": {
-    "@brudcast/react-native": "0.2.1",
+    "@brudcast/react-native": "0.2.2",
     "react": "*",
     "react-native": ">=0.86.0"
   },

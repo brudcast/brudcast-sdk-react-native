@@ -4,6 +4,11 @@ All notable changes to `@brudcast/react-native-push` are listed here. The format
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the package follows
 [Semantic Versioning](https://semver.org). Each release names the native SDK version it runs.
 
+## [0.2.2] - 2026-10-19
+
+No changes to this package; it moves with `@brudcast/react-native-in-app` 0.2.2. Runs the native
+Android and iOS SDKs 0.2.0, the same as 0.2.1.
+
 ## [0.2.1] - 2026-10-19
 
 ### Changed

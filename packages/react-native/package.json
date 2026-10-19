@@ -1,6 +1,6 @@
 {
   "name": "@brudcast/react-native",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Brudcast for React Native: sessions, identity and events, with in-app messaging and push in their own packages.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",

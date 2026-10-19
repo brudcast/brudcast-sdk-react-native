@@ -24,7 +24,7 @@ Firebase integration.
 ## Getting started
 
 ```sh
-yarn add @brudcast/react-native@0.2.1 @brudcast/react-native-push@0.2.1 \
+yarn add @brudcast/react-native@0.2.2 @brudcast/react-native-push@0.2.2 \
   @react-native-firebase/app @react-native-firebase/messaging
 cd ios && pod install
 ```
