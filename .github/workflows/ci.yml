@@ -54,7 +54,7 @@ jobs:
             node -e '
               const files = require(process.argv[1])[0].files.map((file) => file.path);
               const missing = ["lib/module/index.js", "README.md", "LICENSE"].filter((file) => !files.includes(file));
-              const leaked = files.filter((file) => /__tests__|android\/build|\/Pods\//.test(file));
+              const leaked = files.filter((file) => /__tests__|android\/build\/|\/Pods\//.test(file));
               if (missing.length || leaked.length) {
                 console.error(`missing: ${missing.join(", ")}; should not ship: ${leaked.join(", ")}`);
                 process.exit(1);
