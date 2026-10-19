@@ -39,6 +39,7 @@ import { Brudcast } from '@brudcast/react-native';
 import {
   BrudcastInApp,
   BrudcastInboxError,
+  BrudcastMessageDecision,
   designDocument,
   type BrudcastInAppMessage,
 } from '../index';
@@ -158,6 +159,15 @@ describe('the message handler', () => {
 
     expect(handler.mock.calls[0]?.[0].id).toBe('m1');
     expect(mockNative.resolveMessage).toHaveBeenCalledWith('r1', 'custom');
+  });
+
+  it('answers native with a decision constant', async () => {
+    await BrudcastInApp.setMessageHandler(async () => BrudcastMessageDecision.Defer);
+
+    mockNative.onMessageRequest.emit({ requestId: 'r3', message: nativeMessage });
+    await flushPromises();
+
+    expect(mockNative.resolveMessage).toHaveBeenCalledWith('r3', 'defer');
   });
 
   it('shows the message when the handler takes too long', async () => {

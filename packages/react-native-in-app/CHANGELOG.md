@@ -4,6 +4,13 @@ All notable changes to `@brudcast/react-native-in-app` are listed here. The form
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the package follows
 [Semantic Versioning](https://semver.org). Each release names the native SDK version it runs.
 
+## [Unreleased]
+
+### Added
+
+- `BrudcastMessageDecision.Show`, `Suppress`, `Defer` and `Custom`, constants for the message
+  handler's answer. The strings `'show'`, `'suppress'`, `'defer'` and `'custom'` still work.
+
 ## [0.2.1] - 2026-10-19
 
 ### Changed

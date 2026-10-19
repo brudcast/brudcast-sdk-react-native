@@ -29,9 +29,21 @@ export type BrudcastInboxPage = {
 
 /**
  * What the message handler wants done with a message about to show: show it, skip it for this
- * trigger, leave it for the next trigger, or draw it in the app and report what happened.
+ * trigger, leave it for the next trigger, or draw it in the app and report what happened. The
+ * handler may answer with these constants or with the strings they stand for.
  */
-export type BrudcastMessageDecision = 'show' | 'suppress' | 'defer' | 'custom';
+export const BrudcastMessageDecision = {
+  Show: 'show',
+  Suppress: 'suppress',
+  Defer: 'defer',
+  Custom: 'custom',
+} as const;
+
+/**
+ * One of the `BrudcastMessageDecision` values: `show`, `suppress`, `defer` or `custom`.
+ */
+export type BrudcastMessageDecision =
+  (typeof BrudcastMessageDecision)[keyof typeof BrudcastMessageDecision];
 
 /**
  * Decides what happens to a message about to show. It has two seconds to answer, after which the
