@@ -1531,7 +1531,7 @@ __metadata:
     react-native: "npm:0.86.2"
     react-native-builder-bob: "npm:^0.43.2"
   peerDependencies:
-    "@brudcast/react-native": 0.2.1
+    "@brudcast/react-native": 0.2.2
     react: "*"
     react-native: ">=0.86.0"
   languageName: unknown
@@ -1546,7 +1546,7 @@ __metadata:
     react-native: "npm:0.86.2"
     react-native-builder-bob: "npm:^0.43.2"
   peerDependencies:
-    "@brudcast/react-native": 0.2.1
+    "@brudcast/react-native": 0.2.2
     expo: "*"
     react: "*"
     react-native: ">=0.86.0"

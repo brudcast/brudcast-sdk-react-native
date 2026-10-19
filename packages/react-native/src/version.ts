@@ -1,1 +1,1 @@
-export const brudcastReactNativeVersion = '0.2.1';
+export const brudcastReactNativeVersion = '0.2.2';

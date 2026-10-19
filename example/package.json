@@ -1,6 +1,6 @@
 {
   "name": "brudcast-react-native-example",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "description": "The Brudcast React Native example, built the way a customer app would use the SDK.",
   "scripts": {
