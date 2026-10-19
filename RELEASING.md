@@ -25,13 +25,32 @@ The packages pin the native SDKs exactly, so the native release comes first:
    and merge to `main`. CI runs `yarn check:version` and `yarn check:vendor`, which fail until all
    of them agree.
 
-2. Tag `main` with `v<version>`, such as `v0.2.0`, and push the tag.
-3. The workflow checks the tag against every file and the vendored sources against the native tag,
-   builds, then publishes `@brudcast/react-native`, `@brudcast/react-native-in-app` and
-   `@brudcast/react-native-push` with provenance, after approval in the `npm` environment.
+2. Tag `main` with `v<version>`, such as `v0.2.0`, and push the tag:
 
-Versions on npm cannot be replaced. A mistake needs a new version, and `npm deprecate` on the bad
-one.
+   ```sh
+   git switch main && git pull
+   git tag v0.2.0 && git push origin v0.2.0
+   ```
+
+3. The workflow runs, in order:
+   - **Verify**: the tag matches the version, the tagged commit is on `main`, every file names the
+     version with a dated changelog, and the vendored iOS sources match the native tag;
+   - **CI**: the whole of `ci.yml`, the JavaScript checks and the Android and iOS example builds;
+   - **Pack**: builds and packs the three packages once, so the publish ships exactly what was
+     checked;
+   - **Publish to npm**: waits for approval in the `npm` environment, then publishes
+     `@brudcast/react-native`, then `@brudcast/react-native-in-app` and
+     `@brudcast/react-native-push`, with provenance. A version with a `-`, such as `0.3.0-beta.1`,
+     goes to the `next` dist-tag instead of `latest`;
+   - **Create the GitHub release**: titled with the version, with each package's changelog section
+     as the notes, and marked as a prerelease for a `next` version.
+
+To check a release without publishing, run the workflow from the **Actions** tab with **dry run**
+checked. It runs everything up to the pack, and keeps the packed `.tgz` files as an artifact.
+
+A failed publish can be rerun from the Actions tab: packages already on npm at the version are
+skipped. Versions on npm cannot be replaced. A mistake needs a new version, and `npm deprecate` on
+the bad one.
 
 ## Vendored iOS sources
 
@@ -48,10 +67,20 @@ cannot be released by mistake.
 
 ## One-time setup
 
-- On npm, for each package: **Settings** → **Trusted publishing** → add GitHub Actions for
-  `brudcast/brudcast-sdk-react-native` with the workflow `release.yml` and the environment `npm`.
-  Publishing uses GitHub's OIDC token, so there is no stored credential.
-- In the repository settings, create the `npm` environment with required reviewers.
+1. On npm, create the `brudcast` organization if it does not exist, so the `@brudcast` scope is
+   ours.
+2. In the repository settings, create the `npm` environment with required reviewers, and allow it
+   to deploy from `v*` tags only.
+3. npm sets up trusted publishing only on a package that already exists, so the first release
+   publishes with a token:
+   - on npm, create a granular access token with read and write access to the `@brudcast` scope
+     and a short expiry;
+   - add it to the `npm` environment as the secret `NPM_TOKEN`;
+   - release as above.
+4. After the first release, on npm, for each package: **Settings** → **Trusted publishing** → add
+   GitHub Actions for `brudcast/brudcast-sdk-react-native` with the workflow `release.yml` and the
+   environment `npm`. Then delete the `NPM_TOKEN` secret and revoke the token. From then on the
+   workflow publishes with GitHub's OIDC token, so there is no stored credential.
 
 ## Conventions
 
