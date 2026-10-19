@@ -40,7 +40,7 @@ supported. Expo Go cannot load them. Web and Windows are not supported.
 ## Getting started
 
 ```sh
-yarn add @brudcast/react-native@0.2.0 @brudcast/react-native-in-app@0.2.0 @brudcast/react-native-push@0.2.0
+yarn add @brudcast/react-native@0.2.1 @brudcast/react-native-in-app@0.2.1 @brudcast/react-native-push@0.2.1
 cd ios && pod install
 ```
 
