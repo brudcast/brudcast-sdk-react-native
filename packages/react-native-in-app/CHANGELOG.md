@@ -4,7 +4,7 @@ All notable changes to `@brudcast/react-native-in-app` are listed here. The form
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the package follows
 [Semantic Versioning](https://semver.org) with the same version as the native SDKs it runs.
 
-## [0.2.0] - Unreleased
+## [0.2.0] - 2026-10-19
 
 ### Added
 
