@@ -4,12 +4,138 @@ on:
   push:
     tags: ['v[0-9]+.[0-9]+.[0-9]+*']
 
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Run every check and pack the packages, then stop instead of publishing
+        type: boolean
+        default: true
+
 permissions:
   contents: read
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      dist_tag: ${{ steps.version.outputs.dist_tag }}
+      dry_run: ${{ steps.mode.outputs.dry_run }}
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Read the version
+        id: version
+        run: |
+          version="$(node -p 'require("./packages/react-native/package.json").version')"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          case "$version" in
+            *-*) echo "dist_tag=next" >> "$GITHUB_OUTPUT" ;;
+            *) echo "dist_tag=latest" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Check the release tag matches the version
+        if: github.ref_type == 'tag'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if [ "$GITHUB_REF_NAME" != "v$VERSION" ]; then
+            echo "::error::The tag $GITHUB_REF_NAME does not match version $VERSION in packages/react-native/package.json"
+            exit 1
+          fi
+
+      - name: Check the tagged commit is on main
+        if: github.ref_type == 'tag'
+        run: |
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::$GITHUB_REF_NAME points at a commit that is not on main. Merge the release pull request, then tag main."
+            exit 1
+          fi
+
+      - name: Check the tag names the version every file names
+        if: github.ref_type == 'tag'
+        run: node scripts/check-version.js "${GITHUB_REF_NAME#v}"
+
+      - name: Check every file names the same version
+        if: github.ref_type != 'tag'
+        run: yarn check:version
+
+      - name: Check the vendored iOS sources match the native release
+        run: yarn check:vendor
+
+      - name: Decide between a release and a dry run
+        id: mode
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: echo "dry_run=$DRY_RUN" >> "$GITHUB_OUTPUT"
+
+      - name: Check the run publishes from a tag
+        if: steps.mode.outputs.dry_run != 'true' && github.ref_type != 'tag'
+        run: |
+          echo "::error::A release publishes from a v<version> tag. Push the tag, or run this with dry run checked."
+          exit 1
+
+  ci:
+    name: CI
+    needs: verify
+    uses: ./.github/workflows/ci.yml
+
+  pack:
+    name: Pack
+    needs: [verify, ci]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build the packages
+        run: yarn build
+
+      - name: Pack the packages
+        run: |
+          mkdir -p "$RUNNER_TEMP/packages"
+          for dir in packages/react-native packages/react-native-in-app packages/react-native-push; do
+            (cd "$dir" && npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP/packages")
+          done
+
+      - name: Keep the packages for the publish
+        uses: actions/upload-artifact@v6
+        with:
+          name: packages-${{ needs.verify.outputs.version }}
+          path: ${{ runner.temp }}/packages/*.tgz
+          retention-days: 7
+          if-no-files-found: error
+
   publish:
     name: Publish to npm
+    needs: [verify, pack]
+    if: needs.verify.outputs.dry_run != 'true'
     runs-on: ubuntu-latest
     environment: npm
     permissions:
@@ -26,20 +152,74 @@ jobs:
           node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
 
-      - name: Install dependencies
-        run: yarn install --immutable
-
-      - name: Check the tag names the version every file names
-        run: node scripts/check-version.js "${GITHUB_REF_NAME#v}"
-
-      - name: Check the vendored iOS sources match the native release
-        run: yarn check:vendor
-
-      - name: Build the packages
-        run: yarn build
+      - name: Fetch the packages
+        uses: actions/download-artifact@v7
+        with:
+          name: packages-${{ needs.verify.outputs.version }}
+          path: ${{ runner.temp }}/packages
 
       - name: Publish the core, then the module packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ needs.verify.outputs.version }}
+          DIST_TAG: ${{ needs.verify.outputs.dist_tag }}
         run: |
-          for dir in packages/react-native packages/react-native-in-app packages/react-native-push; do
-            (cd "$dir" && npm publish --provenance --access public)
+          for name in react-native react-native-in-app react-native-push; do
+            if npm view "@brudcast/$name@$VERSION" version > /dev/null 2>&1; then
+              echo "@brudcast/$name@$VERSION is already on npm, skipping it"
+              continue
+            fi
+            npm publish "$RUNNER_TEMP/packages/brudcast-$name-$VERSION.tgz" --provenance --access public --tag "$DIST_TAG"
           done
+
+      - name: Summarise the release
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+          DIST_TAG: ${{ needs.verify.outputs.dist_tag }}
+        run: |
+          {
+            echo "### Published $VERSION to npm under \`$DIST_TAG\`"
+            echo
+            for name in react-native react-native-in-app react-native-push; do
+              echo "- [@brudcast/$name](https://www.npmjs.com/package/@brudcast/$name/v/$VERSION)"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  github-release:
+    name: Create the GitHub release
+    needs: [verify, publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v5
+
+      - name: Write the release notes from the changelogs
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: |
+          for name in react-native react-native-in-app react-native-push; do
+            echo "## @brudcast/$name"
+            echo
+            awk -v heading="## [$VERSION]" '
+              index($0, heading) == 1 { found = 1; next }
+              found && /^## \[/ { exit }
+              found { print }
+            ' "packages/$name/CHANGELOG.md" | sed 's/^###/####/'
+          done > "$RUNNER_TEMP/notes.md"
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.verify.outputs.version }}
+          DIST_TAG: ${{ needs.verify.outputs.dist_tag }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            echo "The release $GITHUB_REF_NAME already exists"
+            exit 0
+          fi
+          flags=()
+          if [ "$DIST_TAG" = next ]; then flags+=(--prerelease); fi
+          gh release create "$GITHUB_REF_NAME" --verify-tag --title "$VERSION" --notes-file "$RUNNER_TEMP/notes.md" "${flags[@]}"
